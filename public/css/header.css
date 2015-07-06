@@ -1,0 +1,59 @@
+
+.jumbotron {
+    padding: 5px 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #ffffff;           
+}
+.logo {
+
+    float:left;
+    max-width: 75px;
+    margin: 45px 10px 10px 25px;
+}
+        
+ .jumbotron h1{
+    font-size:35px;
+    text-align: left;
+    text-shadow: 3px 2px 2px rgba(150, 150, 150, 1);
+    color: #660000;
+    height: 30px;
+    margin-top: .1em;
+    margin-bottom: .0em;
+    font-weight: bold;
+    text-align: left;
+    padding-top: 0px;
+    background-color:ffffff;
+     }
+
+
+.line-separator{
+        margin-top: 1.1em;
+        margin-bottom: 0px;
+        height:1px;
+        background:#660000;
+        border-bottom:3px solid #313030;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
