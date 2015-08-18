@@ -8,9 +8,9 @@ Add a new equipment
 
 <h1>Add a new equipment</h1>
 
-{!!! Form::model(array('url' => '/admin.equipment.create')) !!}
+{!! Form::model(array('url' => '/admin.equipment.create')) !!}
 
-{!!! Form::label('name','Name') !!}
+{!! Form::label('name','Name') !!}
 {!! Form::text('name') !!}
 
 {!! Form::label('brand','Brand') !!}

@@ -205,6 +205,7 @@ return [
 		'Form'  	=> 'Illuminate\Html\FormFacade',
 		'HTML'  	=> 'Illuminate\Html\HtmlFacade',
 		'Cart'      => 'Gloudemans\Shoppingcart\Facades\Cart',
+		'Carbon' 	=> 'Carbon\Carbon',
 	],
 
 ];

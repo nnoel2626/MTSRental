@@ -5,7 +5,7 @@ use App\Category;
 use App\Equipment;
 use db;
 
-class Equipment extends Eloquent {
+class Equipment extends \Eloquent {
 
 	protected $table = 'equipment';
 

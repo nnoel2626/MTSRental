@@ -1,17 +1,19 @@
 <?php namespace App\Http\Controllers;
-
+use DB;
+use Cart;
 use App\Equipment;
 use App\Category;
 use App\User;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
-	/** 
-     * Returns the total number of items in the 
-     *  user's cart
-     */
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash;
 
+	
 class CartController extends Controller {
 
 	public function __construct()
@@ -19,84 +21,123 @@ class CartController extends Controller {
 		$this->middleware('auth');
 	}	
 
-	/**
+	  private $DEFAULT_QTY = 1;
+
+
+    /**
 	 * Get the cart content
 	 *
 	 * @return CartCollection
 	 */
-
-	public function getCart() {
-		return View ('/cart.cart')
-		->with( 'equipment', \Gloudemans\Shoppingcart\Facades\Cart::content() );
+    
+	public function index()
+	{
+        $equipment = Cart::content();
+        return view('cart.index', compact('equipment'))
+        ->with('equipment', Cart::content() );
 	}
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		//
+	}
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @return Response
+	 */
 	
-	public function postAddtoCart() { 
-		$Equipment = Equipment::find(Input::get('id')); 
-		$quantity = Input::get('quantity'); 
-		Cart::insert(array( 
-		'id'=>$Equipment->id, 
-		'name'=>$Equipment->title, 
-		'price'=>$Equipment->price, 
-		'quantity'=>$quantity, 
-		'image'=>$Equipment->image 
-		)); 
-		return Redirect::to('cart/cart'); 
+	public function store() {
+
+	$equipment  = Equipment::find( Input::get('id') );
+	$quantity = Input::get('quantity');
+
+	$cart = Cart::add( $equipment->id, $equipment->name, 
+		  $this->DEFAULT_QTY, $equipment->price,
+											[
+						'image'=>$equipment->image_path,			
+						] );
+
+	//var_dump($quantity);
+	//var_dump($equipment);	
+
+	return Redirect()->to('cart/index');
+	return Redirect::to('/cart.equipment.index') 
+		->with('message', 'Equipment Created'); 
+	return redirect()->route('cart.index');
 	}
 
+        
+    
 	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-
-	public function showCart()
+	public function show($id)
 	{
-		return View ('cart.show')
-		->with('equipment', \Gloudemans\Shoppingcart\Facades\Cart::contents()); 
+		//
 	}
-
 	/**
 	 * Show the form for editing the specified resource.
-	 *@param  int  $id
+	 *
+	 * @param  int  $id
 	 * @return Response
-	 */ 
-	 
-	public function editCart()
+	 */
+	public function edit($id)
 	{
-		$item = Cart::item($identifier); 
-	 	$item->remove(); 
-		return Redirect::to('/cart.cart'); 
+		//
 	}
-
 	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-
-	public function updateCart($id)
-	{
-		//
-	}
-
-	public function postUpdateCart() {
+	public function update(){	
 		$i = 0;
-		foreach ( Cart::contents() as $item ) {
+
+       foreach ( Cart::contents() as $item ) {
 			$quantity       = 'quantity' . $i ++;
 			$item->quantity = Input::get( $quantity );
 		}
-		return Redirect::to( 'cart/checkout' );
+		
+  //       if($request->ajax()) return $results;
+		// return Redirect::to( 'cart/index' );
+		return redirect()->route('cart.index');
 	}
-	
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function delete( $rowid)
+	{
+      
+      Cart::remove($rowid);
+		//var_dump($cart);
 
-	public function getRemoveItem( $identifier ) {
-		$item = Cart::item( $identifier );
-		$item->remove();
-		return Redirect::to( 'cart/cart' );
+        return redirect()->route('cart.index');
 	}
-	
-	
-	
+    /**
+     * Empty the cart.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function clear()
+    {
+        Cart::destroy();
+        return redirect()->route('cart.index');
+    }
 }
+
+
+
+

@@ -1,10 +1,6 @@
 @extends( 'layouts.default' )
 
-@section('head')
- {!! HTML::style('css/animate.css') !!} 
-    {!! HTML::style('css/responsive.css') !!}  
-  {!! HTML::style('css/font-awesome.min.css')!!}
-  @stop
+
 @section('content')
 <section>
 <h1>Category View</h1>
@@ -26,7 +22,7 @@ View as:
                     <span><h2>{{ $equipment['name'] }}</h2></span>
                     <span><h2>{{ $equipment['brand'] }}</h2></span>
                     <span><h2>{{ $equipment['model'] }}</h2></span>
-                    <p>${{ $equipment->price }}</p>
+                    <!-- <p>${{ $equipment->price }}</p> -->
                     </div> 
                                      
                     </a>

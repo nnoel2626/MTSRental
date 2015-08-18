@@ -1,66 +1,131 @@
 @extends('layouts.default')
 
 @section('content')
-    <section id="cart_items">
-    		<div class="container">
-    			<div class="breadcrumbs">
-    				<ol class="breadcrumb">
-    				  <li><a href="#">Home</a></li>
-    				  <li class="active">Shopping Cart</li>
-    				</ol>
-    			</div><!-- /breadcrumbs -->
-    			 @if($equipment)
-            {!! Form::open(array('url' => 'cart/updatecart')) !!}
-    			<div class="table-responsive cart_info">
-    				<table class="table table-condensed">
-    					<thead>
-    						<tr class="cart_menu">
-    							<td class="image">Item</td>
-    							<td class="description"></td>
-    							<td class="price">Price</td>
-    							<td class="quantity">Quantity</td>
-    							<td class="total">Total</td>
-    							<td></td>
-    						</tr>
-    					</thead>
-    					<tbody>
-<?php $i=0; ?>
-    					 @foreach($equipment as $equipment)
-    						<tr>
-    							<td class="cart_equipment">
-    								{!! HTML::image($equipment->image, $equipment->name, array('width' => '110', 'height' => '110')) !!}
-    							</td>
-    							<td class="cart_description">
-    								<h4>{!!$equipment->name!!}</h4>
-    								<p>Web ID: {!! $equipment->id !!}</p>
-    							</td>
-    							<td class="cart_price">
-    								<p>${!! $equipment->price !!}</p>
-    							</td>
-    							<td class="cart_quantity">
-    								<div class="cart_quantity_button">
-    									<a class="cart_quantity_up" href=""> + </a>
-    									<input class="cart_quantity_input" type="text" name="quantity{{$i++}}" value="{{ $equipment->quantity }}" autocomplete="off" size="2">
-    									<a class="cart_quantity_down" href=""> - </a>
-    								</div>
-    							</td>
-    							<td class="cart_total">
-    								<p class="cart_total_price">${!! $equipment->total() !!}</p>
-    							</td>
-    							<td class="cart_delete">
-    								<a class="cart_quantity_delete" href="/rental/removeitem/{{ $equipment->identifier }}"><i class="fa fa-times"></i></a>
-    							</td>
-    						</tr>
-    						@endforeach
-    					</tbody>
-    				</table>
-    			</div><!-- /table-responsive cart_info -->
-    				{!! HTML::link('/', 'Continue Shopping', array('class' => 'btn btn-default check_out')) !!}
-						{!! Form::submit('Checkout', array('class' => 'btn btn-default check_out')) !!}
-					{!! Form::close() !!}
-    			 @else
-								<h3 class="text-center">Your shopping cart is empty.</h3>
-					 @endif
-    		</div>
-    	</section> <!--/#cart_items-->
+    <div class="container">
+        @if($total)
+            {{--<div class="page-header well">--}}
+                <h3 class="well">Items in Your Cart</h3>
+            {{--</div>--}}
+            @include('flash::message')
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col-sm-12 col-md-10 col-md-offset-1">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Total</th>
+                            <th> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($equipments as $index => $equipment)
+                            <tr>
+                                <td class="col-sm-8 col-md-6">
+                                    <div class="media">
+                                        <a class="thumbnail pull-left" href="#">{!!
+                                            HTML::image($equipment->options->image, $equipment->title, ['width'=>'72',
+                                            'height'=>'72'])!!}</a>
+
+                                        <div class="media-body">
+                                            <h4 class="media-heading" style="margin-left: 10px;"><a
+                                                        href="#">{{$equipment->name}}</a></h4>
+                                            <h5 class="media-heading" style="margin-left: 10px;"><a href="#"></a></h5>
+                                            <span style="margin-left: 10px;">Status: </span>
+                                            @if($equipment->options->availability)
+                                                <span class="text-success"><strong>In Stock
+                                                        @else
+                                                            <span class="text-danger"><strong>Out of Stock
+                                                                    @endif
+                                                                </strong>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-sm-1 col-md-1" style="text-align: center">
+                                    {!! Form::open(['data-remote', 'method'=>'PATCH', 'route'=>['store.cart.update',
+                                    $equipment->rowid]]) !!}
+                                    {!! Form::input('number', 'qty', $equipment->qty, ['class'=>'form-control','min'=>'1']) !!}
+                                </td>
+                                {!! Form::close() !!}
+
+                                <td class="col-sm-1 col-md-1 text-center"><strong>${{$equipment->price}}</strong></td>
+                                <td class="col-sm-1 col-md-1 text-center">
+                                    <strong id="{{ $equipment->rowid }}">${{$equipment->subtotal}}</strong>
+                                </td>
+
+                                <td class="col-sm-1 col-md-1">
+                                    {!! Form::open(['method'=>'DELETE', 'route'=>['store.cart.destroy',
+                                    $equipment->rowid]]) !!}
+                                    <button type="submit" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span> Remove
+                                    </button>
+                                    {!! Form::close() !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td>  </td>
+                            <td>  </td>
+                            <td>  </td>
+                            <td><h5>Subtotal</h5></td>
+                            <td class="text-right"><h5><strong id="subtotal">${{ $total }}</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <td>  </td>
+                            <td>  </td>
+                            <td>  </td>
+                            <td><h5>Estimated shipping</h5></td>
+                            <td class="text-right"><h5><strong>$0.00</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <td>  </td>
+                            <td>  </td>
+                            <td>  </td>
+                            <td><h3>Total</h3></td>
+                            <td class="text-right"><h3><strong id="total">${{ $total }}</strong></h3></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {!! Form::open(['method'=>'post', 'route'=>'store.cart.saved_carts.store']) !!}
+                                <button type="submit" class="btn btn-success"><span
+                                            class="glyphicon glyphicon-save"></span> Save Cart
+                                </button>
+                                {!! Form::close() !!}
+                            </td>
+                            <td>  </td>
+                            <td>
+                                {!! Form::open(['method'=>'get', 'url'=>'store/cart/clearCart']) !!}
+                                <button type="submit" class="btn btn-default btn-group"><span
+                                            class="glyphicon glyphicon-trash"></span> Empty Cart
+                                </button>
+                                {!! Form::close() !!}
+                            </td>
+                            <td>
+                                <a href="{{ route('store.index') }}" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                                </a>
+                            </td>
+                            <td>
+                                {!! Form::open(['route'=>'store.cart.checkout.index']) !!}
+                                <button type="submit" class="btn btn-success">
+                                    Checkout <span class="glyphicon glyphicon-play"></span>
+                                </button>
+                                {!! Form::close() !!}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <footer>
+                @include('store.sections.footer')
+            </footer>
+    @else
+        @include('store.sections.no_items_in_cart')
+    @endif
+    </div>
 @stop

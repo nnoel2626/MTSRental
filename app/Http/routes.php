@@ -51,96 +51,92 @@ Route::get('home', ['as' => 'home', 'uses' => 'HomeController@index']);
         ]);  
 });
 
+// Route::resource('users', 'UsersController', [
+//     'only' => ['index', 'update', 'destroy', 'edit'],
+//     'names' => [
+//         'index' => 'list_users',
+//         'destroy' => 'delete_account',
+//         'edit' => 'edit_profile'
+//     ]
+// ]);
 
-    //-------------------------------- Rental route------------------------////
-    //Route::model('rental', 'Rental');
+     /* Shop - Front end */
+//-------------------------------- Rental route------------------------////
+
     Route::get('/rental/index', ['as' => 'rental.index', 
-        'uses' =>'RentalController@index']);
+        'uses' =>'RentalController@index']);  
 
 
-Route::get('/rental/getCategory/{cat}', ['as' => 'rental.category', 
-        'uses' => 'RentalController@getCategory']);
+    Route::get('/rental/getCategory/{cat}', [
+        'as' => 'rental.category', 
+         'uses' => 'RentalController@getCategory']);
          
- Route::get('/rental/view/{id}', ['as' => 'rental.view', 
+    Route::get('/rental/view/{id}', ['as' => 'rental.view', 
         'uses' => 'RentalController@getView']); 
 
     Route::get('/rental/show/{id}', ['as' => 'rental.show', 
-        'uses' => 'RentalController@show']);  
+        'uses' => 'RentalController@show']); 
 
-    Route::get('rental/rentEquipment',['as' => 'rental.rentEquipment', 
-        'uses' =>'RentalController@getRentEquipment'
-        ]);
+    Route::get('/rental/search', [
+                'as' => 'rental.search', 
+             'uses' => 'RentalController@getSearch'
+               ]); 
+   
+    Route::get('rental/checkoutForm', [
+            'as' => 'rental.checkoutForm',
+            'uses' => 'RentalController@getCheckout'
+            ]);  
 
-    Route::get('rental/search', ['as' => 'rental.search', 
-        'uses' => 'RentalController@getSearch'
-        ]); 
+   Route::post('rental/checkout', [
+             'as' => 'rental.checkout',
+              'uses' => 'RentalController@postCheckout'
+               ]); 
 
-    
-  
+    Route::get('/rental/contactForm', [
+             'as' => 'contactForm',
+              'uses' => 'RentalController@getContact'
+               ]);  
+
+    Route::post('/rental/contact', [
+             'as' => 'contact',
+              'uses' => 'RentalController@postContact'
+               ]);
+
+   //  Route::get('/rental/rentEquipment',[
+   //              'as' => 'rentEquipment', 
+   //              'uses' =>'RentalController@getRentEquipment'
+   //             ]);
+ 
 ////-------------------------------- Cart route------------------------////
 
-        Route::get('/cart.cart', [ 
-            'as' => 'cart',
-             'uses' => 'CartController@getCart'
-            ]); 
+        Route::get('cart/index', ['as' => 'cart.index', 
+        'uses' =>'CartController@index']); 
 
-        Route::post('/cart.add', [
-            'as' => 'cart.add',
-             'uses' => 'CartController@postAddToCart'
-           ]); 
+         Route::put('cart/update', ['as' => 'cart.update', 
+        'uses' =>'CartController@update']);  
 
-        Route::post('/cart.show', [
-            'as' => 'cart.show',
-             'uses' => 'CartController@showCart'
-           ]);  
+        Route::post('cart/store', ['as' => 'cart.store', 
+        'uses' =>'CartController@store']); 
+   
 
-          Route::get('/cart.edit', [
-            'as' => 'cart.edit',
-             'uses' => 'CartController@editCart'
-
-           ]);  
-
-
-          Route::post('/cart.update', [
-            'as' => 'cart.update',
-             'uses' => 'CartController@updateCart'
-           ]);  
-
-
-//-------------------- order Routes---------------------------//
-            
-     // Route::resource('order', 'OrderController',   [
-     //    'only'=>[ 'index', 'create','store', 'show',
-     //         'edit', 'update', 'destroy']
-     //        ]); 
-
-     //         Route::get('/user/orders', [
-     //        'before' => 'auth.basic',
-     //        'uses' => 'OrderController@getIndex'
-     //        ]);
-
-     //        Route::post('/order', [
-     //        'before' => 'auth.basic',
-     //        'uses' => 'OrderController@postOrder'
-     //        ]);
-
-            
-           
-//-------------------------Roles route------------------------////
-    // Route::model('role', 'Role');                     
-    // route::resource('roles', 'RolesController',[
-    //         'only'=>[ 'index', 'create','store', 
-    //                 'edit', 'update', 'destroy']
-    //     ]);
-
-//-------------------------Permissions route------------------------////
-    // Route::model('permission', 'Permission');
-    // route::resource('permissions', 'PermissionsController',[
-    //         'only'=>[ 'index', 'create','store',
-    //          'edit', 'update', 'destroy']
-    //     ]);
+        Route::get('cart/delete/{rowid}', ['as' => 'cart.delete', 
+        'uses' =>'CartController@delete']); 
         
- // Route::get( '/index',[
-    //         'as' => 'index', 
-    //         'uses'=> 'AdminController@index' 
-    //    // ]); 
+        Route::get('cart/clear', ['as' => 'cart.clear', 
+        'uses' =>'CartController@clear']);
+//-------------------- order Routes---------------------------// 
+        // Route::resource('cart', 'CartController', [         
+        // 'only'=>['create','store', 'show',
+        //      'edit', 'update', 'destroy']
+        // ]); 
+        
+        //  Route::resource('cart', 'CartController', [
+        // 'except' => ['show', 'create']
+        // 'names' => [
+        //             'index' => 'show_cart',
+        //             'edit' => 'edit_cart_view',
+        //             'update' => 'update_cart',
+        //             'store' => 'add_to_cart',
+        //             'destroy' => 'delete_item'
+        //             ]
+        //]);

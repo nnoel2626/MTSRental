@@ -1,8 +1,11 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use App\Category;
+use App\Equipment;
+use db;
 
-class Checkout extends Eloquent {
+class Checkout extends \Eloquent {
 
  protected $guarded  = [];
 
